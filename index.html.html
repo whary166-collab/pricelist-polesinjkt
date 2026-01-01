@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price List - POLESINJKT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f4f4f5;
+            color: #1a1a1a;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .category-tab {
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active {
+            background-color: #facc15;
+            color: #000;
+            font-weight: 800;
+        }
+
+        .motor-tab {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .motor-tab.active {
+            background-color: #facc15;
+            color: #000000;
+            border-color: #facc15;
+            box-shadow: 0 4px 12px rgba(250, 204, 21, 0.4);
+        }
+
+        .price-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            padding: 14px 16px;
+            background: white;
+            border-bottom: 1px solid #f1f1f1;
+            gap: 12px;
+        }
+
+        .price-row:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .header-gradient {
+            background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-link {
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: #facc15;
+        }
+
+        /* Cart Styles */
+        #cart-sidebar {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24">
+
+    <!-- Header Section -->
+    <header class="header-gradient text-white pt-12 pb-10 px-6 text-center shadow-xl">
+        <h1 class="text-5xl font-extrabold tracking-tighter italic mb-4">
+            <span class="text-white">POLESIN</span><span class="text-yellow-400">JKT</span>
+        </h1>
+        
+        <div class="max-w-md mx-auto mb-8">
+            <h2 class="text-yellow-400 font-bold text-lg uppercase tracking-widest mb-2">Kilau Mewah, Kualitas Juara!</h2>
+            <p class="text-gray-300 text-sm leading-relaxed px-4 font-medium">
+                elektroplating nikel chrome motor dengan hasil bening seperti kaca. Kami mengembalikan kemilau motor kesayangan Anda dengan perlindungan maksimal dan ketahanan jangka panjang.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 max-w-sm mx-auto mb-8">
+            <div class="glass-card rounded-xl py-3 px-1">
+                <i class="fas fa-gem text-yellow-400 text-xl mb-2"></i>
+                <p class="text-[9px] uppercase font-bold text-gray-300">Ultra Shiny</p>
+            </div>
+            <div class="glass-card rounded-xl py-3 px-1 border-yellow-400/30 bg-yellow-400/5">
+                <i class="fas fa-shield-halved text-yellow-400 text-xl mb-2"></i>
+                <p class="text-[9px] uppercase font-bold text-yellow-400">Bergaransi</p>
+            </div>
+            <div class="glass-card rounded-xl py-3 px-1">
+                <i class="fas fa-bolt text-yellow-400 text-xl mb-2"></i>
+                <p class="text-[9px] uppercase font-bold text-gray-300">Pro Process</p>
+            </div>
+        </div>
+
+        <div class="flex bg-white/10 p-1 rounded-2xl max-w-xs mx-auto mb-8 border border-white/10">
+            <button onclick="switchCategory('sport')" id="tabSport" class="category-tab active flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest">Sport / Bebek</button>
+            <button onclick="switchCategory('matic')" id="tabMatic" class="category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest text-gray-400">Matic</button>
+        </div>
+
+        <div class="inline-block px-5 py-2 border border-yellow-400/30 rounded-full bg-yellow-400/10">
+            <p class="text-[10px] text-yellow-400 uppercase tracking-[0.3em] font-black">Official Price List 2026</p>
+        </div>
+    </header>
+
+    <!-- Sticky Navigation -->
+    <div class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-2xl mx-auto px-4 py-4">
+            <div class="flex gap-2 items-center mb-4">
+                <div class="relative flex-1">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Cari suku cadang..." 
+                        class="w-full pl-11 pr-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-white transition-all">
+                </div>
+                <!-- Cart Button -->
+                <button onclick="toggleCart()" class="relative p-3 bg-black text-yellow-400 rounded-xl shadow-lg active:scale-90 transition-transform">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                </button>
+            </div>
+
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="motorContainer">
+                <!-- Diisi JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-4 mt-6">
+        <div class="bg-black text-white rounded-t-2xl px-5 py-4 flex justify-between items-center shadow-lg">
+            <div class="flex flex-col">
+                <span id="activeMotorLabel" class="text-base font-black uppercase tracking-wider text-yellow-400"></span>
+                <span id="catInfo" class="text-[9px] text-gray-400 uppercase tracking-[0.2em] font-bold">Katalog Suku Cadang</span>
+            </div>
+            <div class="text-right">
+                <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-white italic uppercase tracking-widest">Update 2026</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="priceGrid" class="bg-white border-x border-b border-gray-200 rounded-b-2xl overflow-hidden shadow-xl mb-8">
+            <!-- Diisi JS -->
+        </div>
+
+        <!-- Footnote / Warranty Section -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 text-center space-y-4">
+            <div class="flex items-center justify-center gap-2 text-yellow-800">
+                <i class="fas fa-shield-alt text-sm"></i>
+                <p class="text-[11px] font-extrabold uppercase tracking-widest">Jaminan Kualitas & Garansi</p>
+            </div>
+            <p class="text-[12px] font-bold text-black italic">"Kami menjamin hasil pengerjaan maksimal, detail, dan bergaransi."</p>
+            <div class="space-y-2 text-left bg-white/50 p-4 rounded-xl border border-yellow-200/50 shadow-sm">
+                <ul class="text-[11px] font-medium text-gray-800 space-y-2 leading-relaxed">
+                    <li class="flex gap-2">
+                        <span class="text-yellow-600 font-bold">•</span>
+                        <span>Harga sewaktu-waktu dapat berubah menyesuaikan <span class="font-black text-black">HARGA BAHAN BAKU</span>.</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="text-yellow-600 font-bold">•</span>
+                        <span><span class="font-black text-black uppercase underline">Garansi 2 Bulan:</span> Jika chrome pecah atau terkelupas karena faktor kualitas.</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="text-yellow-600 font-bold">•</span>
+                        <span><span class="font-black text-red-600">Penting:</span> Garansi <span class="font-black">TIDAK BERLAKU</span> jika rusak akibat benturan (diketuk), kecelakaan (crash), atau kelalaian lainnya.</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="pt-6 border-t border-yellow-200/50">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4">Follow Media Sosial Kami</p>
+                <div class="flex justify-center gap-8">
+                    <a href="https://www.instagram.com/polesin_jkt" target="_blank" class="social-link text-gray-700 hover:text-pink-600 flex flex-col items-center gap-1">
+                        <i class="fab fa-instagram text-2xl"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-widest">Instagram</span>
+                    </a>
+                    <a href="https://web.facebook.com/profile.php?id=100087607099179" target="_blank" class="social-link text-gray-700 hover:text-blue-700 flex flex-col items-center gap-1">
+                        <i class="fab fa-facebook text-2xl"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-widest">Facebook</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@polesinjktt" target="_blank" class="social-link text-gray-700 hover:text-black flex flex-col items-center gap-1">
+                        <i class="fab fa-tiktok text-2xl"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-widest">TikTok</span>
+                    </a>
+                </div>
+            </div>
+
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] pt-4">© 2026 POLESINJKT - All Rights Reserved</p>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-[100] hidden"></div>
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-[101] shadow-2xl flex flex-col">
+        <div class="p-6 bg-black text-white flex justify-between items-center">
+            <div>
+                <h3 class="font-black uppercase tracking-tighter text-xl">Keranjang <span class="text-yellow-400">Chrome POLESINJKT</span></h3>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Estimasi Biaya Chrome</p>
+            </div>
+            <button onclick="toggleCart()" class="text-2xl text-yellow-400"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <!-- Items filled by JS -->
+        </div>
+
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between items-center mb-4">
+                <span class="font-bold text-gray-500 uppercase text-xs tracking-widest">Total Estimasi</span>
+                <span id="cart-total" class="font-black text-xl text-black">Rp 0</span>
+            </div>
+            <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-green-700 active:scale-95 transition-all">
+                <i class="fab fa-whatsapp text-xl"></i>
+                Kirim via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/6289506552947" target="_blank" class="fixed bottom-6 right-6 flex items-center gap-3 bg-black text-white px-6 py-4 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all z-[60] border-2 border-yellow-400/40">
+        <div class="flex flex-col items-end">
+            <span class="text-[9px] uppercase tracking-tighter font-black text-yellow-400 leading-none">Konsultasi</span>
+            <span class="text-sm font-bold leading-none mt-1">WhatsApp Admin</span>
+        </div>
+        <i class="fab fa-whatsapp text-2xl text-yellow-400"></i>
+    </a>
+
+    <script>
+        const database = {
+            sport: {
+                motors: ["Rx- King", "Jupiter z", "Jupiter mx", "Mx king", "Vixion", "Scorpio", "Vega r", "Ninja R", "Ninja RR", "Supra X 125", "Cbr old", "Tiger", "Gtr 150", "Sonic 150", "Gl pro", "Satria 2t"],
+                services: [
+                    { name: "Block Mesin Kanan/Kiri", prices: ["585.000", "560.000", "575.000", "580.000", "580.000", "585.000", "560.000", "590.000", "590.000", "560.000", "580.000", "580.000", "580.000", "580.000", "580.000", "590.000"] },
+                    { name: "Blok Head Atas", prices: ["350.000", "-", "230.000", "230.000", "230.000", "-", "-", "250.000", "250.000", "210.000", "250.000", "250.000", "250.000", "250.000", "250.000", "250.000"] },
+                    { name: "Swing Arm Belakang", prices: ["450.000", "440.000", "480.000", "480.000", "500.000", "500.000", "430.000", "500.000", "570.000", "430.000", "490.000", "490.000", "480.000", "470.000", "450.000", "550.000"] },
+                    { name: "Tabung Shock Depan", prices: ["290.000", "290.000", "290.000", "290.000", "300.000", "300.000", "280.000", "300.000", "300.000", "290.000", "300.000", "290.000", "290.000", "290.000", "290.000", "290.000"] },
+                    { name: "Foot Step Depan", prices: ["175.000", "175.000", "175.000", "175.000", "250.000", "250.000", "175.000", "240.000", "240.000", "175.000", "280.000", "230.000", "180.000", "175.000", "170.000", "170.000"] },
+                    { name: "Foot Step Belakang", prices: ["275.000", "270.000", "280.000", "280.000", "240.000", "260.000", "270.000", "280.000", "280.000", "300.000", "270.000", "280.000", "280.000", "180.000", "250.000", "250.000"] },
+                    { name: "Panel Rem Belakang", prices: ["110.000", "110.000", "110.000", "110.000", "110.000", "110.000", "110.000", "135.000", "140.000", "140.000", "110.000", "110.000", "110.000", "110.000", "110.000", "110.000"] },
+                    { name: "Panel Gir", prices: ["95.000", "95.000", "95.000", "95.000", "95.000", "110.000", "95.000", "110.000", "110.000", "85.000", "100.000", "100.000", "100.000", "95.000", "100.000", "100.000"] },
+                    { name: "Segitiga Atas", prices: ["150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "-", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000"] },
+                    { name: "Segitiga Bawah", prices: ["150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "-", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000"] },
+                    { name: "Behel Belakang", prices: ["275.000", "200.000", "250.000", "265.000", "190.000", "200.000", "175.000", "170.000", "250.000", "265.000", "200.000", "230.000", "265.000", "265.000", "180.000", "175.000"] },
+                    { name: "Standar Samping", prices: ["75.000", "75.000", "75.000", "75.000", "75.000", "75.000", "75.000", "80.000", "80.000", "75.000", "75.000", "75.000", "75.000", "75.000", "75.000", "75.000"] },
+                    { name: "Standar Tengah", prices: ["190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "185.000", "190.000", "190.000", "190.000"] },
+                    { name: "Tutup Tangki", prices: ["100.000", "40.000", "40.000", "40.000", "120.000", "120.000", "40.000", "140.000", "140.000", "45.000", "140.000", "100.000", "40.000", "40.000", "100.000", "40.000"] },
+                    { name: "Handle Kiri / Kopling", prices: ["50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000"] },
+                    { name: "Handle Kanan / Rem", prices: ["50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000", "50.000"] },
+                    { name: "Caliper / Pala Babi", prices: ["135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000"] },
+                    { name: "Master Rem Depan", prices: ["100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000"] },
+                    { name: "Tutup Master Rem", prices: ["40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000", "40.000"] },
+                    { name: "Pedal Rem", prices: ["90.000", "90.000", "90.000", "90.000", "75.000", "75.000", "90.000", "75.000", "75.000", "90.000", "75.000", "90.000", "75.000", "75.000", "90.000", "75.000"] },
+                    { name: "Selahan / Kick Starter", prices: ["75.000", "75.000", "75.000", "75.000", "75.000", "80.000", "75.000", "80.000", "80.000", "75.000", "80.000", "80.000", "75.000", "75.000", "75.000", "75.000"] },
+                    { name: "Tromol Depan", prices: ["200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000"] },
+                    { name: "Tromol Belakang", prices: ["280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000", "280.000"] },
+                    { name: "Baut Kecil", prices: Array(16).fill("4.000") },
+                    { name: "Baut Besar", prices: Array(16).fill("5.000") },
+                    { name: "As Roda", prices: Array(16).fill("20.000") }
+                ]
+            },
+            matic: {
+                motors: ["Mio", "Nouvo Z", "Beat", "Scoopy 2010", "Genio", "Vario led old", "Vario 150", "Pcx", "Adv", "Nmax", "Aerox", "Lexi", "Xmax", "Fazio", "Stylo", "Vespa Matic"],
+                services: [
+                    { name: "Block CVT", nameDisplay: (motor) => motor === "Nouvo Z" ? "Block CVT fullset 3 part" : "Block CVT", prices: ["550.000", "800.000", "550.000", "550.000", "550.000", "575.000", "575.000", "580.000", "585.000", "580.000", "580.000", "580.000", "680.000", "575.000", "580.000", "590.000"] },
+                    { name: "Behel", prices: ["250.000", "265.000", "180.000", "250.000", "250.000", "285.000", "295.000", "370.000", "350.000", "340.000", "-", "290.000", "390.000", "310.000", "310.000", "-"] },
+                    { name: "Step belakang kn/kr", prices: ["230.000", "260.000", "240.000", "140.000", "170.000", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "260.000"] },
+                    { name: "Shock depan", prices: ["280.000", "280.000", "270.000", "270.000", "280.000", "280.000", "280.000", "300.000", "300.000", "300.000", "300.000", "300.000", "310.000", "300.000", "300.000", "280.000"] },
+                    { name: "Kaliper", prices: ["135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "140.000"] },
+                    { name: "Piringan", prices: ["150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "150.000", "160.000"] },
+                    { name: "Standar samping", prices: Array(16).fill("75.000") },
+                    { name: "Standar ganda", prices: ["190.000", "190.000", "190.000", "190.000", "190.000", "190.000", "200.000", "200.000", "200.000", "200.000", "200.000", "200.000", "275.000", "200.000", "200.000", "200.000"] },
+                    { name: "Engkolan", prices: ["75.000", "75.000", "75.000", "75.000", "75.000", "75.000", "75.000", "-", "-", "75.000", "-", "-", "-", "-", "-", "-"] },
+                    { name: "Handle kn/kr", prices: ["100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "100.000", "110.000"] },
+                    { name: "Arm belakang", prices: ["-", "-", "-", "-", "-", "450.000", "450.000", "460.000", "475.000", "450.000", "450.000", "450.000", "470.000", "-", "460.000", "-"] },
+                    { name: "Tromol depan", prices: ["200.000", "200.000", "190.000", "190.000", "190.000", "190.000", "190.000", "-", "-", "-", "-", "-", "-", "-", "-", "-"] },
+                    { name: "Tromol belakang", prices: ["300.000", "300.000", "300.000", "300.000", "300.000", "300.000", "300.000", "-", "-", "-", "-", "-", "-", "-", "-", "-"] },
+                    { name: "Baut Kecil", prices: Array(16).fill("4.000") },
+                    { name: "Baut Besar", prices: Array(16).fill("5.000") },
+                    { name: "As Roda", prices: Array(16).fill("20.000") },
+                    { name: "Per shock belakang", prices: ["140.000", "280.000", "140.000", "140.000", "140.000", "140.000", "140.000", "300.000", "300.000", "300.000", "300.000", "140.000", "300.000", "150.000", "150.000", "160.000"] }
+                ]
+            }
+        };
+
+        let currentCategory = 'sport';
+        let selectedIndex = 0;
+        let cart = [];
+        
+        const motorContainer = document.getElementById('motorContainer');
+        const priceGrid = document.getElementById('priceGrid');
+        const activeMotorLabel = document.getElementById('activeMotorLabel');
+        const searchInput = document.getElementById('searchInput');
+
+        function switchCategory(cat) {
+            currentCategory = cat;
+            selectedIndex = 0;
+            
+            document.getElementById('tabSport').className = `category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest ${cat === 'sport' ? 'active' : 'text-gray-400'}`;
+            document.getElementById('tabMatic').className = `category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest ${cat === 'matic' ? 'active' : 'text-gray-400'}`;
+            
+            document.getElementById('catInfo').innerText = cat === 'sport' ? 'Katalog Suku Cadang Sport' : 'Katalog Suku Cadang Matic';
+            
+            initMotors();
+            render();
+        }
+
+        function initMotors() {
+            motorContainer.innerHTML = "";
+            const motors = database[currentCategory].motors;
+            motors.forEach((name, i) => {
+                const btn = document.createElement('button');
+                btn.className = `motor-tab flex-shrink-0 px-6 py-2.5 rounded-xl border border-gray-200 text-[11px] font-black uppercase tracking-tighter ${i === selectedIndex ? 'active' : 'text-gray-500 bg-white'}`;
+                btn.innerText = name;
+                btn.onclick = () => {
+                    selectedIndex = i;
+                    document.querySelectorAll('.motor-tab').forEach(b => {
+                        b.classList.remove('active');
+                        b.classList.add('bg-white', 'text-gray-500');
+                    });
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-white', 'text-gray-500');
+                    render();
+                    btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                };
+                motorContainer.appendChild(btn);
+            });
+        }
+
+        function render(query = "") {
+            priceGrid.innerHTML = "";
+            const currentData = database[currentCategory];
+            const motorName = currentData.motors[selectedIndex];
+            activeMotorLabel.innerText = motorName;
+            let found = 0;
+
+            currentData.services.forEach(item => {
+                const priceStr = item.prices[selectedIndex];
+                if (priceStr === "-" || !priceStr) return;
+                
+                const displayName = item.nameDisplay ? item.nameDisplay(motorName) : item.name;
+                if (query && !displayName.toLowerCase().includes(query.toLowerCase())) return;
+
+                found++;
+                
+                const row = `
+                    <div class="price-row group hover:bg-yellow-50/50 transition-colors">
+                        <div class="flex flex-col">
+                            <span class="text-[13px] font-bold text-gray-800 uppercase tracking-tight group-hover:text-yellow-700">${displayName}</span>
+                            <span class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Chrome</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[14px] font-black text-black">Rp ${priceStr}</span>
+                        </div>
+                        <div>
+                            <button onclick="addToCart('${motorName}', '${displayName}', '${priceStr}')" class="w-8 h-8 bg-black text-yellow-400 rounded-lg flex items-center justify-center active:scale-90 transition-transform">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                priceGrid.insertAdjacentHTML('beforeend', row);
+            });
+
+            if (found === 0) {
+                priceGrid.innerHTML = `
+                    <div class="py-16 text-center">
+                        <i class="fas fa-search text-gray-200 text-4xl mb-3"></i>
+                        <p class="text-gray-400 text-xs font-bold uppercase tracking-widest">Tidak ditemukan</p>
+                    </div>`;
+            }
+        }
+
+        // Cart Logic
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+
+        function addToCart(motor, part, price) {
+            const item = { motor, part, price };
+            cart.push(item);
+            updateCartUI();
+            
+            // Visual Feedback
+            const btn = event.currentTarget;
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            btn.classList.replace('bg-black', 'bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-plus text-xs"></i>';
+                btn.classList.replace('bg-green-600', 'bg-black');
+            }, 800);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cart-total');
+            
+            cartItems.innerHTML = "";
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center opacity-30 py-20">
+                        <i class="fas fa-shopping-basket text-5xl mb-4"></i>
+                        <p class="text-xs font-black uppercase tracking-widest">Keranjang Kosong</p>
+                    </div>`;
+                cartCount.classList.add('hidden');
+            } else {
+                cartCount.innerText = cart.length;
+                cartCount.classList.remove('hidden');
+                
+                cart.forEach((item, index) => {
+                    const priceVal = parseInt(item.price.replace(/\./g, ''));
+                    total += priceVal;
+                    
+                    cartItems.innerHTML += `
+                        <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl flex justify-between items-center group">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black text-yellow-600 uppercase tracking-tighter">${item.motor}</span>
+                                <span class="text-[12px] font-bold text-black uppercase leading-tight">${item.part}</span>
+                                <span class="text-[11px] font-medium text-gray-500 mt-1">Rp ${item.price}</span>
+                            </div>
+                            <button onclick="removeFromCart(${index})" class="text-gray-300 hover:text-red-500 transition-colors p-2">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+
+            cartTotal.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return;
+
+            let message = "*HALO POLESINJKT!* Saya ingin tanya estimasi chrome:%0A%0A";
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. *${item.motor}* - ${item.part} (Rp ${item.price})%0A`;
+                total += parseInt(item.price.replace(/\./g, ''));
+            });
+
+            message += `%0A*TOTAL ESTIMASI:* Rp ${total.toLocaleString('id-ID')}%0A%0A_Apakah bisa diproses?_`;
+            
+            window.open(`https://wa.me/6289506552947?text=${message}`, '_blank');
+        }
+
+        searchInput.addEventListener('input', (e) => render(e.target.value));
+        window.onload = () => {
+            initMotors();
+            render();
+            updateCartUI();
+        };
+    </script>
+</body>
+</html>
