@@ -28,6 +28,17 @@
             font-weight: 800;
         }
 
+        .mode-tab {
+            transition: all 0.3s ease;
+            font-size: 9px;
+            white-space: nowrap;
+        }
+
+        .mode-tab.active {
+            background-color: #000;
+            color: #facc15;
+        }
+
         .motor-tab {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -76,7 +87,6 @@
             color: #facc15;
         }
 
-        /* Cart Styles */
         #cart-sidebar {
             transition: transform 0.3s ease-in-out;
             transform: translateX(100%);
@@ -97,7 +107,7 @@
         <div class="max-w-md mx-auto mb-8">
             <h2 class="text-yellow-400 font-bold text-lg uppercase tracking-widest mb-2">Kilau Mewah, Kualitas Juara!</h2>
             <p class="text-gray-300 text-sm leading-relaxed px-4 font-medium">
-                elektroplating nikel chrome motor dengan hasil bening seperti kaca. Kami mengembalikan kemilau motor kesayangan Anda dengan perlindungan maksimal dan ketahanan jangka panjang.
+                Elektroplating nikel chrome motor dengan hasil bening seperti kaca. Kami mengembalikan kemilau motor kesayangan Anda dengan perlindungan maksimal dan ketahanan jangka panjang.
             </p>
         </div>
 
@@ -116,7 +126,8 @@
             </div>
         </div>
 
-        <div class="flex bg-white/10 p-1 rounded-2xl max-w-xs mx-auto mb-8 border border-white/10">
+        <!-- Category Toggle -->
+        <div class="flex bg-white/10 p-1 rounded-2xl max-w-xs mx-auto mb-4 border border-white/10">
             <button onclick="switchCategory('sport')" id="tabSport" class="category-tab active flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest">Sport / Bebek</button>
             <button onclick="switchCategory('matic')" id="tabMatic" class="category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest text-gray-400">Matic</button>
         </div>
@@ -129,13 +140,19 @@
     <!-- Sticky Navigation -->
     <div class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="max-w-2xl mx-auto px-4 py-4">
+            <!-- Price Mode Toggle (3 Modes Now) -->
+            <div class="flex bg-gray-100 p-1 rounded-xl mb-4 border border-gray-200 gap-1 overflow-x-auto no-scrollbar">
+                <button onclick="setPriceMode('detail')" id="modeDetail" class="mode-tab active flex-1 py-2 px-2 rounded-lg font-extrabold uppercase tracking-widest">Detail</button>
+                <button onclick="setPriceMode('kontes')" id="modeKontes" class="mode-tab flex-1 py-2 px-2 rounded-lg font-extrabold uppercase tracking-widest text-gray-500">Detail Kontes</button>
+                <button onclick="setPriceMode('non-detail')" id="modeNonDetail" class="mode-tab flex-1 py-2 px-2 rounded-lg font-extrabold uppercase tracking-widest text-gray-500">Non Detail</button>
+            </div>
+
             <div class="flex gap-2 items-center mb-4">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
                     <input type="text" id="searchInput" placeholder="Cari suku cadang..." 
                         class="w-full pl-11 pr-4 py-3 bg-gray-100 border border-transparent rounded-xl text-sm outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-white transition-all">
                 </div>
-                <!-- Cart Button -->
                 <button onclick="toggleCart()" class="relative p-3 bg-black text-yellow-400 rounded-xl shadow-lg active:scale-90 transition-transform">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cartCount" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
@@ -167,7 +184,7 @@
             <!-- Diisi JS -->
         </div>
 
-        <!-- Footnote / Warranty Section -->
+        <!-- Warranty Section -->
         <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 text-center space-y-4">
             <div class="flex items-center justify-center gap-2 text-yellow-800">
                 <i class="fas fa-shield-alt text-sm"></i>
@@ -186,7 +203,7 @@
                     </li>
                     <li class="flex gap-2">
                         <span class="text-yellow-600 font-bold">•</span>
-                        <span><span class="font-black text-red-600">Penting:</span> Garansi <span class="font-black">TIDAK BERLAKU</span> jika rusak akibat benturan (diketuk), kecelakaan (crash), atau kelalaian lainnya.</span>
+                        <span><span class="font-black text-red-600">Penting:</span> Garansi <span class="font-black">TIDAK BERLAKU</span> jika rusak akibat benturan, kecelakaan, atau kelalaian.</span>
                     </li>
                 </ul>
             </div>
@@ -318,6 +335,7 @@
 
         let currentCategory = 'sport';
         let selectedIndex = 0;
+        let currentPriceMode = 'detail';
         let cart = [];
         
         const motorContainer = document.getElementById('motorContainer');
@@ -325,15 +343,27 @@
         const activeMotorLabel = document.getElementById('activeMotorLabel');
         const searchInput = document.getElementById('searchInput');
 
+        function setPriceMode(mode) {
+            currentPriceMode = mode;
+            // Update UI tabs
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.add('text-gray-500');
+            });
+            const activeTab = document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1).replace('-', ''));
+            if(activeTab) {
+                activeTab.classList.add('active');
+                activeTab.classList.remove('text-gray-500');
+            }
+            render(searchInput.value);
+        }
+
         function switchCategory(cat) {
             currentCategory = cat;
             selectedIndex = 0;
-            
             document.getElementById('tabSport').className = `category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest ${cat === 'sport' ? 'active' : 'text-gray-400'}`;
             document.getElementById('tabMatic').className = `category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest ${cat === 'matic' ? 'active' : 'text-gray-400'}`;
-            
             document.getElementById('catInfo').innerText = cat === 'sport' ? 'Katalog Suku Cadang Sport' : 'Katalog Suku Cadang Matic';
-            
             initMotors();
             render();
         }
@@ -360,6 +390,18 @@
             });
         }
 
+        function calculateDisplayPrice(rawPriceStr) {
+            let val = parseInt(rawPriceStr.replace(/\./g, ''));
+            if (currentPriceMode === 'non-detail') {
+                val = val * 0.85; // -15%
+            } else if (currentPriceMode === 'kontes') {
+                val = val * 1.20; // +20%
+            }
+            // Round to nearest 1000
+            val = Math.round(val / 1000) * 1000;
+            return val.toLocaleString('id-ID');
+        }
+
         function render(query = "") {
             priceGrid.innerHTML = "";
             const currentData = database[currentCategory];
@@ -375,18 +417,23 @@
                 if (query && !displayName.toLowerCase().includes(query.toLowerCase())) return;
 
                 found++;
+                const displayPrice = calculateDisplayPrice(priceStr);
+                
+                let labelMode = 'Detail';
+                if(currentPriceMode === 'kontes') labelMode = 'Detail Kontes';
+                if(currentPriceMode === 'non-detail') labelMode = 'Non Detail';
                 
                 const row = `
                     <div class="price-row group hover:bg-yellow-50/50 transition-colors">
                         <div class="flex flex-col">
                             <span class="text-[13px] font-bold text-gray-800 uppercase tracking-tight group-hover:text-yellow-700">${displayName}</span>
-                            <span class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Chrome</span>
+                            <span class="text-[8px] ${currentPriceMode === 'kontes' ? 'text-yellow-600' : 'text-gray-400'} font-bold uppercase tracking-widest">${labelMode}</span>
                         </div>
                         <div class="text-right">
-                            <span class="text-[14px] font-black text-black">Rp ${priceStr}</span>
+                            <span class="text-[14px] font-black text-black">Rp ${displayPrice}</span>
                         </div>
                         <div>
-                            <button onclick="addToCart('${motorName}', '${displayName}', '${priceStr}')" class="w-8 h-8 bg-black text-yellow-400 rounded-lg flex items-center justify-center active:scale-90 transition-transform">
+                            <button onclick="addToCart('${motorName}', '${displayName} (${labelMode})', '${displayPrice}')" class="w-8 h-8 bg-black text-yellow-400 rounded-lg flex items-center justify-center active:scale-90 transition-transform">
                                 <i class="fas fa-plus text-xs"></i>
                             </button>
                         </div>
@@ -452,7 +499,6 @@
                 cart.forEach((item, index) => {
                     const priceVal = parseInt(item.price.replace(/\./g, ''));
                     total += priceVal;
-                    
                     cartItems.innerHTML += `
                         <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl flex justify-between items-center group">
                             <div class="flex flex-col">
@@ -467,23 +513,18 @@
                     `;
                 });
             }
-
             cartTotal.innerText = `Rp ${total.toLocaleString('id-ID')}`;
         }
 
         function checkoutWhatsApp() {
             if (cart.length === 0) return;
-
             let message = "*HALO POLESINJKT!* Saya ingin tanya estimasi chrome:%0A%0A";
             let total = 0;
-            
             cart.forEach((item, index) => {
                 message += `${index + 1}. *${item.motor}* - ${item.part} (Rp ${item.price})%0A`;
                 total += parseInt(item.price.replace(/\./g, ''));
             });
-
             message += `%0A*TOTAL ESTIMASI:* Rp ${total.toLocaleString('id-ID')}%0A%0A_Apakah bisa diproses?_`;
-            
             window.open(`https://wa.me/6289506552947?text=${message}`, '_blank');
         }
 
