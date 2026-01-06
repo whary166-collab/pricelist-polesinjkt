@@ -28,17 +28,6 @@
             font-weight: 800;
         }
 
-        .mode-tab {
-            transition: all 0.3s ease;
-            font-size: 9px;
-            white-space: nowrap;
-        }
-
-        .mode-tab.active {
-            background-color: #000;
-            color: #facc15;
-        }
-
         .motor-tab {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -58,6 +47,7 @@
             background: white;
             border-bottom: 1px solid #f1f1f1;
             gap: 12px;
+            position: relative;
         }
 
         .price-row:nth-child(even) {
@@ -94,6 +84,28 @@
         #cart-sidebar.open {
             transform: translateX(0);
         }
+
+        .mode-dropdown {
+            display: none;
+            position: absolute;
+            right: 16px;
+            top: 50px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            min-width: 180px;
+            overflow: hidden;
+        }
+        .mode-dropdown.show {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24">
@@ -104,9 +116,9 @@
             <span class="text-white">POLESIN</span><span class="text-yellow-400">JKT</span>
         </h1>
         
-        <div class="max-w-md mx-auto mb-8">
+        <div class="max-w-md mx-auto mb-6">
             <h2 class="text-yellow-400 font-bold text-lg uppercase tracking-widest mb-2">Kilau Mewah, Kualitas Juara!</h2>
-            <p class="text-gray-300 text-sm leading-relaxed px-4 font-medium">
+            <p class="text-gray-300 text-sm leading-relaxed px-4 font-medium mb-6">
                 Elektroplating nikel chrome motor dengan hasil bening seperti kaca. Kami mengembalikan kemilau motor kesayangan Anda dengan perlindungan maksimal dan ketahanan jangka panjang.
             </p>
         </div>
@@ -132,21 +144,30 @@
             <button onclick="switchCategory('matic')" id="tabMatic" class="category-tab flex-1 py-3 rounded-xl text-[10px] uppercase tracking-widest text-gray-400">Matic</button>
         </div>
 
-        <div class="inline-block px-5 py-2 border border-yellow-400/30 rounded-full bg-yellow-400/10">
+        <div class="inline-block px-5 py-2 border border-yellow-400/30 rounded-full bg-yellow-400/10 mb-6">
             <p class="text-[10px] text-yellow-400 uppercase tracking-[0.3em] font-black">Official Price List 2026</p>
+        </div>
+
+        <!-- Sosial Media -->
+        <div class="flex justify-center gap-8">
+            <a href="https://www.instagram.com/polesin_jkt" target="_blank" class="social-link text-gray-300 hover:text-yellow-400 flex flex-col items-center gap-1">
+                <i class="fab fa-instagram text-2xl"></i>
+                <span class="text-[8px] font-bold uppercase tracking-widest">Instagram</span>
+            </a>
+            <a href="https://web.facebook.com/profile.php?id=100087607099179" target="_blank" class="social-link text-gray-300 hover:text-yellow-400 flex flex-col items-center gap-1">
+                <i class="fab fa-facebook text-2xl"></i>
+                <span class="text-[8px] font-bold uppercase tracking-widest">Facebook</span>
+            </a>
+            <a href="https://www.tiktok.com/@polesinjktt" target="_blank" class="social-link text-gray-300 hover:text-yellow-400 flex flex-col items-center gap-1">
+                <i class="fab fa-tiktok text-2xl"></i>
+                <span class="text-[8px] font-bold uppercase tracking-widest">TikTok</span>
+            </a>
         </div>
     </header>
 
     <!-- Sticky Navigation -->
     <div class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="max-w-2xl mx-auto px-4 py-4">
-            <!-- Price Mode Toggle (3 Modes Now) -->
-            <div class="flex bg-gray-100 p-1 rounded-xl mb-4 border border-gray-200 gap-1 overflow-x-auto no-scrollbar">
-                <button onclick="setPriceMode('detail')" id="modeDetail" class="mode-tab active flex-1 py-2 px-2 rounded-lg font-extrabold uppercase tracking-widest">Detail</button>
-                <button onclick="setPriceMode('kontes')" id="modeKontes" class="mode-tab flex-1 py-2 px-2 rounded-lg font-extrabold uppercase tracking-widest text-gray-500">Detail Kontes</button>
-                <button onclick="setPriceMode('non-detail')" id="modeNonDetail" class="mode-tab flex-1 py-2 px-2 rounded-lg font-extrabold uppercase tracking-widest text-gray-500">Non Detail</button>
-            </div>
-
             <div class="flex gap-2 items-center mb-4">
                 <div class="relative flex-1">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
@@ -208,35 +229,17 @@
                 </ul>
             </div>
             
-            <div class="pt-6 border-t border-yellow-200/50">
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4">Follow Media Sosial Kami</p>
-                <div class="flex justify-center gap-8">
-                    <a href="https://www.instagram.com/polesin_jkt" target="_blank" class="social-link text-gray-700 hover:text-pink-600 flex flex-col items-center gap-1">
-                        <i class="fab fa-instagram text-2xl"></i>
-                        <span class="text-[9px] font-bold uppercase tracking-widest">Instagram</span>
-                    </a>
-                    <a href="https://web.facebook.com/profile.php?id=100087607099179" target="_blank" class="social-link text-gray-700 hover:text-blue-700 flex flex-col items-center gap-1">
-                        <i class="fab fa-facebook text-2xl"></i>
-                        <span class="text-[9px] font-bold uppercase tracking-widest">Facebook</span>
-                    </a>
-                    <a href="https://www.tiktok.com/@polesinjktt" target="_blank" class="social-link text-gray-700 hover:text-black flex flex-col items-center gap-1">
-                        <i class="fab fa-tiktok text-2xl"></i>
-                        <span class="text-[9px] font-bold uppercase tracking-widest">TikTok</span>
-                    </a>
-                </div>
-            </div>
-
             <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] pt-4">© 2026 POLESINJKT - All Rights Reserved</p>
         </div>
     </main>
 
-    <!-- Cart Sidebar -->
+    <!-- Cart Sidebar & JS -->
     <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-[100] hidden"></div>
     <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-[101] shadow-2xl flex flex-col">
         <div class="p-6 bg-black text-white flex justify-between items-center">
             <div>
                 <h3 class="font-black uppercase tracking-tighter text-xl">Keranjang <span class="text-yellow-400">Chrome POLESINJKT</span></h3>
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Estimasi Biaya Chrome</p>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Biaya Chrome</p>
             </div>
             <button onclick="toggleCart()" class="text-2xl text-yellow-400"><i class="fas fa-times"></i></button>
         </div>
@@ -247,7 +250,7 @@
 
         <div class="p-6 border-t border-gray-100 bg-gray-50">
             <div class="flex justify-between items-center mb-4">
-                <span class="font-bold text-gray-500 uppercase text-xs tracking-widest">Total Estimasi</span>
+                <span class="font-bold text-gray-500 uppercase text-xs tracking-widest">Total </span>
                 <span id="cart-total" class="font-black text-xl text-black">Rp 0</span>
             </div>
             <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-green-700 active:scale-95 transition-all">
@@ -314,6 +317,7 @@
                 services: [
                     { name: "Block CVT", nameDisplay: (motor) => motor === "Nouvo Z" ? "Block CVT fullset 3 part" : "Block CVT", prices: ["550.000", "800.000", "550.000", "550.000", "550.000", "575.000", "575.000", "580.000", "585.000", "580.000", "580.000", "580.000", "680.000", "575.000", "580.000", "590.000"] },
                     { name: "Behel", prices: ["250.000", "265.000", "180.000", "250.000", "250.000", "285.000", "295.000", "370.000", "350.000", "340.000", "-", "290.000", "390.000", "310.000", "310.000", "-"] },
+                    { name: "Arm Nouvo Z", nameDisplay: (motor) => motor === "Nouvo Z" ? "Arm" : "Arm Nouvo Z", prices: ["-", "440.000", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"] },
                     { name: "Step belakang kn/kr", prices: ["230.000", "260.000", "240.000", "140.000", "170.000", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "260.000"] },
                     { name: "Shock depan", prices: ["280.000", "280.000", "270.000", "270.000", "280.000", "280.000", "280.000", "300.000", "300.000", "300.000", "300.000", "300.000", "310.000", "300.000", "300.000", "280.000"] },
                     { name: "Kaliper", prices: ["135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "135.000", "140.000"] },
@@ -335,28 +339,12 @@
 
         let currentCategory = 'sport';
         let selectedIndex = 0;
-        let currentPriceMode = 'detail';
         let cart = [];
         
         const motorContainer = document.getElementById('motorContainer');
         const priceGrid = document.getElementById('priceGrid');
         const activeMotorLabel = document.getElementById('activeMotorLabel');
         const searchInput = document.getElementById('searchInput');
-
-        function setPriceMode(mode) {
-            currentPriceMode = mode;
-            // Update UI tabs
-            document.querySelectorAll('.mode-tab').forEach(tab => {
-                tab.classList.remove('active');
-                tab.classList.add('text-gray-500');
-            });
-            const activeTab = document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1).replace('-', ''));
-            if(activeTab) {
-                activeTab.classList.add('active');
-                activeTab.classList.remove('text-gray-500');
-            }
-            render(searchInput.value);
-        }
 
         function switchCategory(cat) {
             currentCategory = cat;
@@ -390,16 +378,20 @@
             });
         }
 
-        function calculateDisplayPrice(rawPriceStr) {
+        function calculatePriceByMode(rawPriceStr, mode) {
             let val = parseInt(rawPriceStr.replace(/\./g, ''));
-            if (currentPriceMode === 'non-detail') {
-                val = val * 0.85; // -15%
-            } else if (currentPriceMode === 'kontes') {
-                val = val * 1.20; // +20%
-            }
-            // Round to nearest 1000
+            if (mode === 'non-detail') val = val * 0.85;
+            else if (mode === 'kontes') val = val * 1.20;
             val = Math.round(val / 1000) * 1000;
-            return val.toLocaleString('id-ID');
+            return val;
+        }
+
+        function toggleModeDropdown(id) {
+            document.querySelectorAll('.mode-dropdown').forEach(el => {
+                if(el.id !== `dropdown-${id}`) el.classList.remove('show');
+            });
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            dropdown.classList.toggle('show');
         }
 
         function render(query = "") {
@@ -409,7 +401,7 @@
             activeMotorLabel.innerText = motorName;
             let found = 0;
 
-            currentData.services.forEach(item => {
+            currentData.services.forEach((item, idx) => {
                 const priceStr = item.prices[selectedIndex];
                 if (priceStr === "-" || !priceStr) return;
                 
@@ -417,25 +409,39 @@
                 if (query && !displayName.toLowerCase().includes(query.toLowerCase())) return;
 
                 found++;
-                const displayPrice = calculateDisplayPrice(priceStr);
                 
-                let labelMode = 'Detail';
-                if(currentPriceMode === 'kontes') labelMode = 'Detail Kontes';
-                if(currentPriceMode === 'non-detail') labelMode = 'Non Detail';
-                
+                const pDetail = calculatePriceByMode(priceStr, 'detail').toLocaleString('id-ID');
+                const pKontes = calculatePriceByMode(priceStr, 'kontes').toLocaleString('id-ID');
+                const pNonDetail = calculatePriceByMode(priceStr, 'non-detail').toLocaleString('id-ID');
+
                 const row = `
                     <div class="price-row group hover:bg-yellow-50/50 transition-colors">
                         <div class="flex flex-col">
                             <span class="text-[13px] font-bold text-gray-800 uppercase tracking-tight group-hover:text-yellow-700">${displayName}</span>
-                            <span class="text-[8px] ${currentPriceMode === 'kontes' ? 'text-yellow-600' : 'text-gray-400'} font-bold uppercase tracking-widest">${labelMode}</span>
+                            
                         </div>
                         <div class="text-right">
-                            <span class="text-[14px] font-black text-black">Rp ${displayPrice}</span>
+                            <span class="text-[11px] font-black text-gray-400 uppercase tracking-tighter">Pilih Mode</span>
                         </div>
-                        <div>
-                            <button onclick="addToCart('${motorName}', '${displayName} (${labelMode})', '${displayPrice}')" class="w-8 h-8 bg-black text-yellow-400 rounded-lg flex items-center justify-center active:scale-90 transition-transform">
+                        <div class="relative">
+                            <button onclick="toggleModeDropdown('${idx}')" class="w-8 h-8 bg-black text-yellow-400 rounded-lg flex items-center justify-center active:scale-90 transition-transform">
                                 <i class="fas fa-plus text-xs"></i>
                             </button>
+                            
+                            <div id="dropdown-${idx}" class="mode-dropdown">
+                                <button onclick="addToCart('${motorName}', '${displayName}', 'Detail', '${pDetail}')" class="w-full px-4 py-3 text-left hover:bg-gray-50 flex justify-between items-center border-b border-gray-100">
+                                    <span class="text-[10px] font-black uppercase">Detail</span>
+                                    <span class="text-[10px] font-bold">Rp ${pDetail}</span>
+                                </button>
+                                <button onclick="addToCart('${motorName}', '${displayName}', 'Detail Kontes', '${pKontes}')" class="w-full px-4 py-3 text-left hover:bg-yellow-50 flex justify-between items-center border-b border-gray-100">
+                                    <span class="text-[10px] font-black uppercase text-yellow-700">Detail Kontes</span>
+                                    <span class="text-[10px] font-bold text-yellow-700">Rp ${pKontes}</span>
+                                </button>
+                                <button onclick="addToCart('${motorName}', '${displayName}', 'Non Detail', '${pNonDetail}')" class="w-full px-4 py-3 text-left hover:bg-gray-50 flex justify-between items-center">
+                                    <span class="text-[10px] font-black uppercase text-gray-500">Non Detail</span>
+                                    <span class="text-[10px] font-bold text-gray-500">Rp ${pNonDetail}</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -458,18 +464,13 @@
             overlay.classList.toggle('hidden');
         }
 
-        function addToCart(motor, part, price) {
-            const item = { motor, part, price };
+        function addToCart(motor, part, mode, price) {
+            const fullPartName = `${part} (${mode})`;
+            const item = { motor, part: fullPartName, price };
             cart.push(item);
             updateCartUI();
             
-            const btn = event.currentTarget;
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            btn.classList.replace('bg-black', 'bg-green-600');
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-plus text-xs"></i>';
-                btn.classList.replace('bg-green-600', 'bg-black');
-            }, 800);
+            document.querySelectorAll('.mode-dropdown').forEach(el => el.classList.remove('show'));
         }
 
         function removeFromCart(index) {
@@ -518,15 +519,21 @@
 
         function checkoutWhatsApp() {
             if (cart.length === 0) return;
-            let message = "*HALO POLESINJKT!* Saya ingin tanya estimasi chrome:%0A%0A";
+            let message = "*HALO POLESINJKT!*  chrome:%0A%0A";
             let total = 0;
             cart.forEach((item, index) => {
                 message += `${index + 1}. *${item.motor}* - ${item.part} (Rp ${item.price})%0A`;
                 total += parseInt(item.price.replace(/\./g, ''));
             });
-            message += `%0A*TOTAL ESTIMASI:* Rp ${total.toLocaleString('id-ID')}%0A%0A_Apakah bisa diproses?_`;
+            message += `%0A*TOTAL :* Rp ${total.toLocaleString('id-ID')}%0A%0A_Apakah bisa diproses?_`;
             window.open(`https://wa.me/6289506552947?text=${message}`, '_blank');
         }
+
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('.relative')) {
+                document.querySelectorAll('.mode-dropdown').forEach(el => el.classList.remove('show'));
+            }
+        });
 
         searchInput.addEventListener('input', (e) => render(e.target.value));
         window.onload = () => {
